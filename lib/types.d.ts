@@ -11,10 +11,11 @@ type ProductType = {
   description: string;
   media: [string];
   category: string;
-  collections: [string];
+  collections: [string] | [CollectionType]; // Make this more flexible
   tags: [string];
   price: number;
-  cost: number;
+  cost?: number; // Make optional
+  expense?: number; // Add expense field
   sizes: [string];
   colors: [string];
   createdAt: string;

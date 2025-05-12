@@ -16,9 +16,18 @@ export const GET = async (req: NextRequest) => {
 
     let user = await User.findOne({ clerkId: userId })
 
-    // When the user sign-in for the 1st, immediately we will create a new user for them
+    // When the user sign-in for the 1st time, immediately create a new user for them
     if (!user) {
-      user = await User.create({ clerkId: userId })
+      user = await User.create({ 
+        clerkId: userId,
+        wishlist: [] // Ensure wishlist is initialized as an empty array
+      })
+      await user.save()
+    }
+
+    // Ensure wishlist exists
+    if (!user.wishlist) {
+      user.wishlist = []
       await user.save()
     }
 
