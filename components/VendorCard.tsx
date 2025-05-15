@@ -16,8 +16,18 @@ const VendorCard = ({ vendor }: VendorCardProps) => {
       className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-6"
     >
       <div className="flex flex-col items-center text-center">
-        <div className="w-24 h-24 bg-grey-1 rounded-full flex items-center justify-center mb-4">
-          <Store className="w-12 h-12 text-grey-2" />
+        <div className="w-24 h-24 bg-grey-1 rounded-full flex items-center justify-center mb-4 overflow-hidden">
+          {vendor.logo ? (
+            <Image
+              src={vendor.logo}
+              alt={vendor.businessName}
+              width={96}
+              height={96}
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <Store className="w-12 h-12 text-grey-2" />
+          )}
         </div>
         
         <h3 className="text-heading3-bold mb-2">{vendor.businessName}</h3>

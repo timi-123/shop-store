@@ -25,8 +25,18 @@ const VendorDetailPage = async ({ params }: { params: { vendorId: string } }) =>
       {/* Vendor Header */}
       <div className="bg-white rounded-lg shadow-md p-8 mb-8">
         <div className="flex flex-col md:flex-row items-center gap-6">
-          <div className="w-32 h-32 bg-grey-1 rounded-full flex items-center justify-center">
-            <Store className="w-16 h-16 text-grey-2" />
+          <div className="w-32 h-32 bg-grey-1 rounded-full flex items-center justify-center overflow-hidden">
+            {vendor.logo ? (
+              <Image
+                src={vendor.logo}
+                alt={vendor.businessName}
+                width={128}
+                height={128}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <Store className="w-16 h-16 text-grey-2" />
+            )}
           </div>
           
           <div className="flex-1 text-center md:text-left">
