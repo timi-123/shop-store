@@ -1,3 +1,4 @@
+// lib/actions/actions.ts (Store project)
 interface AdminProduct {
   _id: string;
   title: string;
@@ -10,6 +11,9 @@ interface AdminProduct {
   expense: number;
   sizes: string[];
   colors: string[];
+  vendor: string | VendorType;
+  isApproved: boolean;
+  stockQuantity: number;
   createdAt: string | Date;
   updatedAt: string | Date;
 }
@@ -97,9 +101,12 @@ export const getProductDetails = async (productId: string) => {
     
     const product = await response.json() as AdminProduct;
     // Map expense to cost if needed
-    product.expense = product.expense;
+    const mappedProduct = {
+      ...product,
+      cost: product.expense
+    };
     
-    return product;
+    return mappedProduct;
   } catch (error) {
     console.error('Error fetching product details:', error);
     return null;
@@ -179,6 +186,97 @@ export const getRelatedProducts = async (productId: string) => {
     return mappedProducts;
   } catch (error) {
     console.error('Error fetching related products:', error);
+    return [];
+  }
+};
+
+// Vendor specific functions
+export const getVendors = async () => {
+  try {
+    console.log('Fetching vendors from:', `${process.env.NEXT_PUBLIC_API_URL}/vendors/public`);
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/vendors/public`, {
+      cache: 'no-store'
+    });
+    
+    if (!response.ok) {
+      console.error('Failed to fetch vendors:', response.status);
+      return [];
+    }
+    
+    const vendors = await response.json();
+    console.log('Vendors fetched:', vendors.length);
+    return vendors;
+  } catch (error) {
+    console.error('Error fetching vendors:', error);
+    return [];
+  }
+};
+
+export const getVendorDetails = async (vendorId: string) => {
+  try {
+    console.log('Fetching vendor details from:', `${process.env.NEXT_PUBLIC_API_URL}/vendors/public/${vendorId}`);
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/vendors/public/${vendorId}`, {
+      cache: 'no-store'
+    });
+    
+    if (!response.ok) {
+      console.error('Failed to fetch vendor details:', response.status);
+      return null;
+    }
+    
+    const vendor = await response.json();
+    return vendor;
+  } catch (error) {
+    console.error('Error fetching vendor details:', error);
+    return null;
+  }
+};
+
+export const getVendorProducts = async (vendorId: string) => {
+  try {
+    console.log('Fetching vendor products from:', `${process.env.NEXT_PUBLIC_API_URL}/vendors/public/${vendorId}/products`);
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/vendors/public/${vendorId}/products`, {
+      cache: 'no-store'
+    });
+    
+    if (!response.ok) {
+      console.error('Failed to fetch vendor products:', response.status);
+      return [];
+    }
+    
+    const products = await response.json() as AdminProduct[];
+    console.log('Vendor products fetched:', products.length);
+    
+    // Map expense to cost if needed
+    const mappedProducts = products.map((product: AdminProduct) => ({
+      ...product,
+      cost: product.expense
+    }));
+    
+    return mappedProducts;
+  } catch (error) {
+    console.error('Error fetching vendor products:', error);
+    return [];
+  }
+};
+
+export const getVendorCollections = async (vendorId: string) => {
+  try {
+    console.log('Fetching vendor collections from:', `${process.env.NEXT_PUBLIC_API_URL}/vendors/public/${vendorId}/collections`);
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/vendors/public/${vendorId}/collections`, {
+      cache: 'no-store'
+    });
+    
+    if (!response.ok) {
+      console.error('Failed to fetch vendor collections:', response.status);
+      return [];
+    }
+    
+    const collections = await response.json();
+    console.log('Vendor collections fetched:', collections.length);
+    return collections;
+  } catch (error) {
+    console.error('Error fetching vendor collections:', error);
     return [];
   }
 };
